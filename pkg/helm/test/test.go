@@ -1,4 +1,4 @@
-package helmtest
+package test
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/pkg/errors"
-	"github.com/stackrox/rox/pkg/helmutil"
+	helmUtil "github.com/stackrox/rox/pkg/helm/util"
 	"github.com/stackrox/rox/pkg/pointers"
 	"helm.sh/helm/v3/pkg/chartutil"
 )
@@ -14,7 +14,7 @@ import (
 // applySetOptions takes the values specified in the `set` stanza and merges them into the otherwise defined values.
 func (t *Test) applySetOptions() error {
 	for keyPathStr, val := range t.Set {
-		vals, err := helmutil.ValuesForKVPair(keyPathStr, val)
+		vals, err := helmUtil.ValuesForKVPair(keyPathStr, val)
 		if err != nil {
 			return errors.Wrap(err, "in 'set'")
 		}

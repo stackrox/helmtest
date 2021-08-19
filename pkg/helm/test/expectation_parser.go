@@ -1,4 +1,4 @@
-package helmtest
+package test
 
 import (
 	"bufio"

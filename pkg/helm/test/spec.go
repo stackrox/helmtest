@@ -1,4 +1,4 @@
-package helmtest
+package test
 
 import (
 	"github.com/itchyny/gojq"
