@@ -3,6 +3,7 @@ package test
 import (
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -15,7 +16,7 @@ func LoadSuite(rootDir string) (*Test, error) {
 	}
 
 	if suite.Name == "" {
-		suite.Name = rootDir
+		suite.Name = strings.TrimRight(rootDir, "/")
 	}
 
 	// Locate `.test.yaml` files, if any.

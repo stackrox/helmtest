@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
+	"github.com/stackrox/helmtest/internal/schemas"
 	"io"
 	"path"
 	"strings"
@@ -25,7 +26,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/yaml"
 	"k8s.io/kubectl/pkg/util/openapi"
 	"k8s.io/kubectl/pkg/util/openapi/validation"
-	yaml2 "sigs.k8s.io/yaml"
+	k8sYaml "sigs.k8s.io/yaml"
 )
 
 type runner struct {
@@ -68,7 +69,7 @@ func (r *runner) readAndValidateYAML(fileName, fileContents string, resources op
 		r.Assert().NoErrorf(validationErr, "YAML document #%d in file %s failed validation", docCounter, fileName)
 
 		// YAMLToJSONStrict will not only convert to YAML, but also validate that there are no duplicate keys.
-		jsonBytes, err := yaml2.YAMLToJSONStrict(yamlDoc)
+		jsonBytes, err := k8sYaml.YAMLToJSONStrict(yamlDoc)
 		if !r.Assert().NoErrorf(err, "could not convert YAML document #%d in file %s to JSON", docCounter, fileName) {
 			continue
 		}
@@ -163,7 +164,7 @@ func (r *runner) instantiateWorld(renderVals chartutil.Values, resources openapi
 	return world
 }
 
-func (r *runner) loadSchemas() (visible, available schemas) {
+func (r *runner) loadSchemas() (visible, available schemas.Schemas) {
 	var visibleSchemaNames, availableSchemaNames []string
 	r.test.forEachScopeTopDown(func(t *Test) {
 		server := t.Server
@@ -190,12 +191,12 @@ func (r *runner) loadSchemas() (visible, available schemas) {
 	visibleSchemaNames = sliceutils.StringUnique(visibleSchemaNames)
 
 	for _, schemaName := range availableSchemaNames {
-		schema, err := getSchema(schemaName)
+		schema, err := r.tgt.SchemaRegistry.GetSchema(schemaName)
 		r.Require().NoErrorf(err, "failed to load schema %q", schemaName)
 		available = append(available, schema)
 	}
 	for _, schemaName := range visibleSchemaNames {
-		schema, err := getSchema(schemaName)
+		schema, err := r.tgt.SchemaRegistry.GetSchema(schemaName)
 		r.Require().NoErrorf(err, "failed to load schema %q", schemaName)
 		visible = append(visible, schema)
 	}
@@ -230,7 +231,7 @@ func (r *runner) Run() {
 	}
 	if len(visibleSchemas) > 0 {
 		newCaps := *caps
-		newCaps.APIVersions = visibleSchemas.versionSet()
+		newCaps.APIVersions = visibleSchemas.VersionSet()
 		caps = &newCaps
 	}
 

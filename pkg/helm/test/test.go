@@ -103,11 +103,12 @@ func (t *Test) initialize() error {
 func (t *Test) Run(testingT *testing.T, tgt *Target) {
 	testingT.Run(t.Name, func(testingT *testing.T) {
 		testingT.Parallel()
-		t.doRun(testingT, tgt)
+		t.DoRun(testingT, tgt)
 	})
 }
 
-func (t *Test) doRun(testingT *testing.T, tgt *Target) {
+// DoRun runs a test directly, without an intermediate `testingT.Run` invocation.
+func (t *Test) DoRun(testingT *testing.T, tgt *Target) {
 	if len(t.Tests) > 0 {
 		// non-leaf case
 		for _, subTest := range t.Tests {

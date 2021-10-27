@@ -1,6 +1,7 @@
 package test
 
 import (
+	"github.com/stackrox/helmtest/internal/schemas"
 	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/chartutil"
 )
@@ -12,4 +13,6 @@ type Target struct {
 	Chart          *chart.Chart
 	ReleaseOptions chartutil.ReleaseOptions
 	Capabilities   *chartutil.Capabilities
+
+	SchemaRegistry *schemas.Registry
 }
