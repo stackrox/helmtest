@@ -1,8 +1,9 @@
 package test
 
 import (
-	"github.com/stackrox/helmtest/internal/logic"
 	"testing"
+
+	"github.com/stackrox/helmtest/internal/logic"
 
 	"github.com/stretchr/testify/assert"
 )

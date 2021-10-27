@@ -3,8 +3,9 @@ package test
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/pkg/errors"
 	"os"
+
+	"github.com/pkg/errors"
 	"sigs.k8s.io/yaml"
 )
 

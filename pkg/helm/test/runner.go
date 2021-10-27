@@ -4,14 +4,15 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
-	"github.com/stackrox/helmtest/internal/compiler"
-	"github.com/stackrox/helmtest/internal/logic"
-	"github.com/stackrox/helmtest/internal/rox-imported/sliceutils"
-	"github.com/stackrox/helmtest/internal/rox-imported/stringutils"
 	"io"
 	"path"
 	"strings"
 	"testing"
+
+	"github.com/stackrox/helmtest/internal/compiler"
+	"github.com/stackrox/helmtest/internal/logic"
+	"github.com/stackrox/helmtest/internal/rox-imported/sliceutils"
+	"github.com/stackrox/helmtest/internal/rox-imported/stringutils"
 
 	"github.com/itchyny/gojq"
 	"github.com/pkg/errors"
@@ -41,7 +42,7 @@ func (r *runner) Require() *require.Assertions {
 	return require.New(r.t)
 }
 
-func (r *runner) readAndValidateYAML(fileName string, fileContents string, resources openapi.Resources) []unstructured.Unstructured {
+func (r *runner) readAndValidateYAML(fileName, fileContents string, resources openapi.Resources) []unstructured.Unstructured {
 	validator := validation.NewSchemaValidation(resources)
 
 	yamlReader := yaml.NewYAMLReader(bufio.NewReader(strings.NewReader(fileContents)))

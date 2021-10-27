@@ -2,11 +2,14 @@ package test
 
 import (
 	"embed"
-	"github.com/stackrox/helmtest/internal/rox-imported/gziputil"
-	"github.com/stackrox/helmtest/internal/rox-imported/set"
 	"io/fs"
 	"path"
 	"strings"
+
+	"github.com/stackrox/helmtest/internal/rox-imported/gziputil"
+	"github.com/stackrox/helmtest/internal/rox-imported/set"
+
+	"sync"
 
 	openapi_v2 "github.com/googleapis/gnostic/openapiv2"
 	"github.com/pkg/errors"
@@ -15,7 +18,6 @@ import (
 	schema2 "k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/kube-openapi/pkg/util/proto"
 	"k8s.io/kubectl/pkg/util/openapi"
-	"sync"
 )
 
 //go:embed openapi-schemas/*

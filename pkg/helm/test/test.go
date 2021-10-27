@@ -2,11 +2,12 @@ package test
 
 import (
 	"fmt"
+	"strings"
+	"testing"
+
 	"github.com/stackrox/helmtest/internal/parser"
 	helmUtil "github.com/stackrox/helmtest/internal/rox-imported/helmutil"
 	"github.com/stackrox/helmtest/internal/rox-imported/pointers"
-	"strings"
-	"testing"
 
 	"github.com/pkg/errors"
 	"helm.sh/helm/v3/pkg/chartutil"

@@ -12,4 +12,3 @@ func StringUnique(slice []string) []string {
 	}
 	return result
 }
-

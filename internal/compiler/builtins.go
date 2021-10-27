@@ -2,6 +2,7 @@ package compiler
 
 import (
 	"fmt"
+
 	"github.com/itchyny/gojq"
 	"github.com/pkg/errors"
 	"github.com/stackrox/helmtest/internal/logic"
