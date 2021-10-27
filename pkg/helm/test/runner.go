@@ -4,6 +4,10 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
+	"github.com/stackrox/helmtest/internal/compiler"
+	"github.com/stackrox/helmtest/internal/logic"
+	"github.com/stackrox/helmtest/internal/rox-imported/sliceutils"
+	"github.com/stackrox/helmtest/internal/rox-imported/stringutils"
 	"io"
 	"path"
 	"strings"
@@ -11,8 +15,6 @@ import (
 
 	"github.com/itchyny/gojq"
 	"github.com/pkg/errors"
-	"github.com/stackrox/helmtest/internal/sliceutils"
-	"github.com/stackrox/helmtest/internal/stringutils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"helm.sh/helm/v3/pkg/chartutil"
@@ -264,7 +266,7 @@ func (r *runner) evaluatePredicates(world map[string]interface{}) {
 	})
 
 	for _, pred := range allPreds {
-		code, err := gojqCompile(pred)
+		code, err := compiler.Compile(pred)
 
 		if !r.Assert().NoErrorf(err, "failed to compile predicate %q", pred) {
 			continue
@@ -275,13 +277,13 @@ func (r *runner) evaluatePredicates(world map[string]interface{}) {
 		for result, ok := iter.Next(); ok; result, ok = iter.Next() {
 			hadElem = true
 			err, _ := result.(error)
-			if errors.Is(err, errAssumptionViolation) {
+			if errors.Is(err, logic.ErrAssumptionViolation) {
 				continue
 			}
 			if !r.Assert().NoErrorf(err, "failed to evaluate pred %q", pred) {
 				continue
 			}
-			r.Assert().True(truthiness(result), "predicate %q evaluated to falsy result %v", pred, result)
+			r.Assert().True(logic.Truthy(result), "predicate %q evaluated to falsy result %v", pred, result)
 		}
 		r.Assert().Truef(hadElem, "predicate %q evaluated to empty sequence", pred)
 	}

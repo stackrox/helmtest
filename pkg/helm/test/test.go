@@ -2,12 +2,13 @@ package test
 
 import (
 	"fmt"
+	"github.com/stackrox/helmtest/internal/parser"
+	helmUtil "github.com/stackrox/helmtest/internal/rox-imported/helmutil"
+	"github.com/stackrox/helmtest/internal/rox-imported/pointers"
 	"strings"
 	"testing"
 
 	"github.com/pkg/errors"
-	helmUtil "github.com/stackrox/helmtest/internal/helmutil"
-	"github.com/stackrox/helmtest/internal/pointers"
 	"helm.sh/helm/v3/pkg/chartutil"
 )
 
@@ -34,7 +35,7 @@ func (t *Test) parseDefs() error {
 	if !strings.HasSuffix(defsStr, ";") {
 		return errors.New("definitions block must end with a semicolon")
 	}
-	parsedDefs, err := gojqParse(defsStr)
+	parsedDefs, err := parser.ParseQuery(defsStr)
 	if err != nil {
 		return errors.Wrap(err, "parsing definitions")
 	}
@@ -51,7 +52,7 @@ func (t *Test) parsePredicates() error {
 		return nil
 	}
 
-	predicates, err := parseExpectations(expectStr)
+	predicates, err := parser.ParseExpectations(expectStr)
 	if err != nil {
 		return errors.Wrap(err, "parsing expectations")
 	}

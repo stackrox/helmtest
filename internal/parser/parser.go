@@ -1,4 +1,4 @@
-package test
+package parser
 
 import (
 	"bufio"
@@ -9,10 +9,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-// parseExpectations parses an "expect" section. The expect section consists of several jq filters, one per line.
+// ParseExpectations parses an "expect" section. The expect section consists of several jq filters, one per line.
 // In order to allow longer filter expressions, a filter expression may be continued on the next line. This is indicated
 // by having the continuation line start with any whitespace character.
-func parseExpectations(spec string) ([]*gojq.Query, error) {
+func ParseExpectations(spec string) ([]*gojq.Query, error) {
 	var queries []*gojq.Query
 	scanner := bufio.NewScanner(strings.NewReader(spec))
 	current := ""
@@ -35,7 +35,7 @@ func parseExpectations(spec string) ([]*gojq.Query, error) {
 		}
 
 		if current != "" {
-			query, err := gojqParse(current)
+			query, err := ParseQuery(current)
 			if err != nil {
 				return nil, errors.Wrapf(err, "parsing query ending on line %d", lineNo-1)
 			}
@@ -48,4 +48,16 @@ func parseExpectations(spec string) ([]*gojq.Query, error) {
 	}
 
 	return queries, nil
+}
+
+// ParseQuery parses a single query.
+func ParseQuery(src string) (*gojq.Query, error) {
+	query, err := gojq.Parse(src)
+	if err != nil {
+		return nil, err
+	}
+	if err := postProcessQuery(query); err != nil {
+		return nil, err
+	}
+	return query, nil
 }
