@@ -11,8 +11,8 @@ import (
 
 	"github.com/itchyny/gojq"
 	"github.com/pkg/errors"
-	"github.com/stackrox/rox/pkg/sliceutils"
-	"github.com/stackrox/rox/pkg/stringutils"
+	"github.com/stackrox/helmtest/internal/sliceutils"
+	"github.com/stackrox/helmtest/internal/stringutils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"helm.sh/helm/v3/pkg/chartutil"

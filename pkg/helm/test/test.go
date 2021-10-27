@@ -6,8 +6,8 @@ import (
 	"testing"
 
 	"github.com/pkg/errors"
-	helmUtil "github.com/stackrox/rox/pkg/helm/util"
-	"github.com/stackrox/rox/pkg/pointers"
+	helmUtil "github.com/stackrox/helmtest/internal/helmutil"
+	"github.com/stackrox/helmtest/internal/pointers"
 	"helm.sh/helm/v3/pkg/chartutil"
 )
 
