@@ -10,6 +10,9 @@ import (
 type Test struct {
 	// Public section - fields settable via YAML
 
+	Params interface{} `json:"params,omitempty"`
+	ValuesTemplate *string `json:"valuesTemplate,omitmepty"`
+
 	Name string `json:"name,omitempty"`
 
 	Values map[string]interface{} `json:"values,omitempty"`

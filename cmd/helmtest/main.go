@@ -78,11 +78,11 @@ func mainCmd() error {
 
 	var suites []*framework.Test
 	for _, suiteDir := range suiteDirs {
-		suite, err := framework.LoadSuite(suiteDir)
+		topLevelTests, err := framework.LoadSuite(suiteDir)
 		if err != nil {
 			return errors.Wrapf(err, "loading suite %q", suiteDir)
 		}
-		suites = append(suites, suite)
+		suites = append(suites, topLevelTests...)
 	}
 
 	tests := make([]testing.InternalTest, 0, len(suites))

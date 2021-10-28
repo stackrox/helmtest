@@ -9,7 +9,7 @@ import (
 )
 
 // LoadSuite loads a helmtest suite from the given directory.
-func LoadSuite(rootDir string) (*Test, error) {
+func LoadSuite(rootDir string) ([]*Test, error) {
 	var suite Test
 	if err := unmarshalYamlFromFileStrict(filepath.Join(rootDir, "suite.yaml"), &suite); err != nil && !os.IsNotExist(err) {
 		return nil, errors.Wrap(err, "loading suite specification")
@@ -38,9 +38,16 @@ func LoadSuite(rootDir string) (*Test, error) {
 		suite.Tests = append(suite.Tests, &test)
 	}
 
-	if err := suite.initialize(); err != nil {
-		return nil, err
+	tests, err := suite.instantiate(nil)
+	if err != nil {
+		return nil, errors.Wrap(err, "instantiating suite")
 	}
 
-	return &suite, nil
+	for _, test := range tests {
+		if err := test.initialize(); err != nil {
+			return nil, err
+		}
+	}
+
+	return tests, nil
 }

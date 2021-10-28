@@ -1,9 +1,11 @@
 package framework
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 	"testing"
+	"text/template"
 
 	"github.com/stackrox/helmtest/internal/parser"
 	helmUtil "github.com/stackrox/helmtest/internal/rox-imported/helmutil"
@@ -63,14 +65,87 @@ func (t *Test) parsePredicates() error {
 	return nil
 }
 
+func (t *Test) instantiate(parentParamVals map[string]interface{}) ([]*Test, error) {
+	allParamVals := []map[string]interface{}{parentParamVals}
+	if t.Params != nil {
+		var err error
+		allParamVals, err = expandParameters(t.Params)
+		if err != nil {
+			return nil, errors.Wrap(err, "expanding parameters")
+		}
+		for _, paramVals := range allParamVals {
+			for k, v := range parentParamVals {
+				if _, ok := paramVals[k]; !ok {
+					paramVals[k] = v
+				}
+			}
+		}
+		t.Params = nil
+	}
+
+	var instantiations []*Test
+	for _, paramVals := range allParamVals {
+		instantiation := *t
+		if err := instantiation.applyParamValues(paramVals); err != nil {
+			return nil, errors.Wrap(err, "applying parameter values")
+		}
+		instantiations = append(instantiations, &instantiation)
+	}
+	return instantiations, nil
+}
+
+func (t *Test) applyParamValues(paramVals map[string]interface{}) error {
+	if t.Params != nil {
+		return errors.New("test still has parameters set")
+	}
+	if strings.Contains(t.Name, "{{") {
+		nameTpl, err := template.New("").Parse(t.Name)
+		if err != nil {
+			return errors.Wrap(err, "parsing templatized name")
+		}
+		var buf strings.Builder
+		if err := nameTpl.Execute(&buf, paramVals); err != nil {
+			return errors.Wrap(err, "executing name template")
+		}
+		t.Name = buf.String()
+	}
+	if t.ValuesTemplate != nil {
+		valuesTpl, err := template.New("").Parse(*t.ValuesTemplate)
+		if err != nil {
+			return errors.Wrap(err, "parsing templatized values")
+		}
+		var buf bytes.Buffer
+		if err := valuesTpl.Execute(&buf, paramVals); err != nil {
+			return errors.Wrap(err, "executing values template")
+		}
+		vals, err := chartutil.ReadValues(buf.Bytes())
+		if err != nil {
+			return errors.Wrap(err, "parsing rendered values template")
+		}
+		t.Values = chartutil.CoalesceTables(vals, t.Values)
+		t.ValuesTemplate = nil
+	}
+
+	var instantiatedChildren []*Test
+	for _, child := range t.Tests {
+		instantiations, err := child.instantiate(paramVals)
+		if err != nil {
+			return errors.Wrap(err, "instantiating child")
+		}
+		instantiatedChildren = append(instantiatedChildren, instantiations...)
+	}
+	t.Tests = instantiatedChildren
+	return nil
+}
+
 // initialize initializes the test, parsing some string-based values into their semantic counterparts. It also
 // recursively initializes the sub-tests. initialize assumes that a name as well as the parent pointer has been set, and
 // that the parent is fully initialized.
 func (t *Test) initialize() error {
-	if err := t.applySetOptions(); err != nil {
+	if err := t.parseDefs(); err != nil {
 		return err
 	}
-	if err := t.parseDefs(); err != nil {
+	if err := t.applySetOptions(); err != nil {
 		return err
 	}
 
