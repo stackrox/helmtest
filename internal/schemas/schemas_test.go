@@ -11,10 +11,11 @@ func TestSchemas(t *testing.T) {
 		"kubernetes-1.20.2",
 		"openshift-3.11.0",
 		"openshift-4.1.0",
+		"com.coreos",
 	}
 
 	for _, schemaName := range requiredSchemas {
-		_, err := getSchema(schemaName)
+		_, err := BuiltinSchemas().GetSchema(schemaName)
 		assert.NoErrorf(t, err, "failed to load required schema %s", schemaName)
 	}
 }

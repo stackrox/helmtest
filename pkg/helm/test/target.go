@@ -14,5 +14,5 @@ type Target struct {
 	ReleaseOptions chartutil.ReleaseOptions
 	Capabilities   *chartutil.Capabilities
 
-	SchemaRegistry *schemas.Registry
+	SchemaRegistry schemas.Registry
 }

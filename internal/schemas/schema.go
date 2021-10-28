@@ -1,13 +1,22 @@
 package schemas
 
 import (
+	"strings"
+
 	openapi_v2 "github.com/googleapis/gnostic/openapiv2"
 	"github.com/pkg/errors"
+	"github.com/stackrox/helmtest/internal/rox-imported/set"
+	"gopkg.in/yaml.v3"
+	"helm.sh/helm/v3/pkg/chartutil"
 	k8sSchema "k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/kubectl/pkg/util/openapi"
-	"strings"
-	"gopkg.in/yaml.v3"
 )
+
+// Schema is a schema that can be used for validation.
+type Schema interface {
+	openapi.Resources
+	VersionSet() chartutil.VersionSet
+}
 
 type schema struct {
 	openapi.Resources
@@ -40,4 +49,18 @@ func newSchema(doc *openapi_v2.Document) (*schema, error) {
 		Resources: resources,
 		allGVKs:   allGVKs,
 	}, nil
+}
+
+func (s *schema) VersionSet() chartutil.VersionSet {
+	allVersions := set.NewStringSet()
+	for gvk := range s.allGVKs {
+		prefix := ""
+		if gvk.Group != "" {
+			allVersions.Add(gvk.Group)
+			prefix = gvk.Group + "/"
+		}
+		allVersions.Add(prefix + gvk.Version)
+		allVersions.Add(prefix + gvk.Version + "/" + gvk.Kind)
+	}
+	return allVersions.AsSortedSlice(func(i, j string) bool { return i < j })
 }

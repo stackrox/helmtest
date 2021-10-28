@@ -4,11 +4,12 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
-	"github.com/stackrox/helmtest/internal/schemas"
 	"io"
 	"path"
 	"strings"
 	"testing"
+
+	"github.com/stackrox/helmtest/internal/schemas"
 
 	"github.com/stackrox/helmtest/internal/compiler"
 	"github.com/stackrox/helmtest/internal/logic"
@@ -190,13 +191,18 @@ func (r *runner) loadSchemas() (visible, available schemas.Schemas) {
 	availableSchemaNames = sliceutils.StringUnique(availableSchemaNames)
 	visibleSchemaNames = sliceutils.StringUnique(visibleSchemaNames)
 
+	schemaRegistry := r.tgt.SchemaRegistry
+	if schemaRegistry == nil {
+		schemaRegistry = schemas.BuiltinSchemas()
+	}
+
 	for _, schemaName := range availableSchemaNames {
-		schema, err := r.tgt.SchemaRegistry.GetSchema(schemaName)
+		schema, err := schemaRegistry.GetSchema(schemaName)
 		r.Require().NoErrorf(err, "failed to load schema %q", schemaName)
 		available = append(available, schema)
 	}
 	for _, schemaName := range visibleSchemaNames {
-		schema, err := r.tgt.SchemaRegistry.GetSchema(schemaName)
+		schema, err := schemaRegistry.GetSchema(schemaName)
 		r.Require().NoErrorf(err, "failed to load schema %q", schemaName)
 		visible = append(visible, schema)
 	}
