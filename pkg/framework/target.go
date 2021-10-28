@@ -1,4 +1,4 @@
-package test
+package framework
 
 import (
 	"github.com/stackrox/helmtest/internal/schemas"

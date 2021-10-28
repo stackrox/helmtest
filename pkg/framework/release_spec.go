@@ -1,4 +1,4 @@
-package test
+package framework
 
 import "helm.sh/helm/v3/pkg/chartutil"
 

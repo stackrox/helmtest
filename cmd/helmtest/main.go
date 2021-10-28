@@ -5,8 +5,9 @@ import (
 	"os"
 	"testing"
 
+	"github.com/stackrox/helmtest/pkg/framework"
+
 	"github.com/pkg/errors"
-	"github.com/stackrox/helmtest/pkg/helm/test"
 	"helm.sh/helm/v3/pkg/chart"
 	"helm.sh/helm/v3/pkg/chart/loader"
 	"helm.sh/helm/v3/pkg/chartutil"
@@ -64,7 +65,7 @@ func mainCmd() error {
 		return errors.Wrapf(err, "loading chart %q", chartPath)
 	}
 
-	target := &test.Target{
+	target := &framework.Target{
 		ReleaseOptions: chartutil.ReleaseOptions{
 			Name:      releaseName,
 			Namespace: namespace,
@@ -75,9 +76,9 @@ func mainCmd() error {
 		Chart: chartToTest,
 	}
 
-	var suites []*test.Test
+	var suites []*framework.Test
 	for _, suiteDir := range suiteDirs {
-		suite, err := test.LoadSuite(suiteDir)
+		suite, err := framework.LoadSuite(suiteDir)
 		if err != nil {
 			return errors.Wrapf(err, "loading suite %q", suiteDir)
 		}
