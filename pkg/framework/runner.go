@@ -121,7 +121,10 @@ func (r *runner) instantiateWorld(renderVals chartutil.Values, resources openapi
 
 	if *r.test.ExpectError {
 		r.Require().Error(err, "expected rendering to fail")
-		world["error"] = err.Error()
+		errStr := err.Error()
+		// Store the error string normalized, to avoid impact of formatting.
+		world["error"] = normalizeString(errStr)
+		world["errorRaw"] = errStr
 		return world
 	}
 
@@ -136,7 +139,8 @@ func (r *runner) instantiateWorld(renderVals chartutil.Values, resources openapi
 		}
 
 		if fileName == "templates/NOTES.txt" {
-			world["notes"] = renderedContents
+			world["notes"] = normalizeString(renderedContents)
+			world["notesRaw"] = renderedContents
 			continue
 		}
 
