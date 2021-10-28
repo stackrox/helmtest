@@ -33,6 +33,8 @@ type Test struct {
 
 	funcDefs   []*gojq.FuncDef
 	predicates []*gojq.Query
+
+	paramValues interface{}
 }
 
 // ReleaseSpec specifies how the release options for Helm will be constructed.

@@ -95,6 +95,7 @@ func (t *Test) instantiate(parentParamVals map[string]interface{}) ([]*Test, err
 }
 
 func (t *Test) applyParamValues(paramVals map[string]interface{}) error {
+	t.paramValues = paramVals
 	if t.Params != nil {
 		return errors.New("test still has parameters set")
 	}

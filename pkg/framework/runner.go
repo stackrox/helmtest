@@ -166,6 +166,7 @@ func (r *runner) instantiateWorld(renderVals chartutil.Values, resources openapi
 	}
 
 	world["objects"] = allObjects
+	world["params"] = r.test.paramValues
 	return world
 }
 
@@ -278,13 +279,13 @@ func (r *runner) evaluatePredicates(world map[string]interface{}) {
 	})
 
 	for _, pred := range allPreds {
-		code, err := compiler.Compile(pred)
+		code, err := compiler.Compile(pred, gojq.WithVariables([]string{"$_"}))
 
 		if !r.Assert().NoErrorf(err, "failed to compile predicate %q", pred) {
 			continue
 		}
 
-		iter := code.Run(runtime.DeepCopyJSON(world))
+		iter := code.Run(runtime.DeepCopyJSON(world), runtime.DeepCopyJSON(world))
 		hadElem := false
 		for result, ok := iter.Next(); ok; result, ok = iter.Next() {
 			hadElem = true
