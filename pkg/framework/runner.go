@@ -96,6 +96,13 @@ func (r *runner) readAndValidateYAML(fileName, fileContents string, resources op
 
 	// Validate that there is at most a single empty document, and only if the file is otherwise empty.
 	if len(objs) > 0 {
+		// We can tolerate an empty document at the beginning and at the end
+		if len(emptyDocs) > 0 && emptyDocs[0] == 1 {
+			emptyDocs = emptyDocs[1:]
+		}
+		if len(emptyDocs) > 0 && emptyDocs[len(emptyDocs)-1] == docCounter {
+			emptyDocs = emptyDocs[:len(emptyDocs)-1]
+		}
 		r.Assert().Empty(emptyDocs, "multi-document YAML file %s is non-empty but has empty documents", fileName)
 	} else {
 		r.Assert().LessOrEqualf(len(emptyDocs), 1, "multi-document YAML file %s has multiple empty documents", fileName)
