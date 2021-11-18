@@ -14,14 +14,16 @@ const (
 
 // Loader loads a test suite.
 type Loader struct {
-	GlobPattern string
-	rootDir string
+	globPattern string
+	rootDir     string
 }
 
 // NewLoader returns a a loader and applies options to it.
 func NewLoader(rootDir string, opts ...LoaderOpt) *Loader {
-	loader := Loader{}
-	loader.rootDir = rootDir
+	loader := Loader{
+		rootDir: rootDir,
+		globPattern: defaultTestFileGlobPattern,
+	}
 
 	for _, opt := range opts {
 		opt(&loader)
@@ -35,7 +37,7 @@ type LoaderOpt func(loader *Loader)
 // WithCustomFilePattern sets a custom file pattern to load test files.
 func WithCustomFilePattern(pattern string) LoaderOpt {
 	return func(loader *Loader) {
-		loader.GlobPattern = pattern
+		loader.globPattern = pattern
 	}
 }
 
@@ -51,7 +53,7 @@ func (loader *Loader) LoadSuite() (*Test, error) {
 	}
 
 	// Locate test files, if any.
-	testYAMLFiles, err := filepath.Glob(filepath.Join(loader.rootDir, loader.GlobPattern))
+	testYAMLFiles, err := filepath.Glob(filepath.Join(loader.rootDir, loader.globPattern))
 	if err != nil {
 		return nil, errors.Wrap(err, "globbing for .test.yaml files")
 	}
