@@ -78,7 +78,7 @@ func mainCmd() error {
 
 	var suites []*framework.Test
 	for _, suiteDir := range suiteDirs {
-		suite, err := framework.LoadSuite(suiteDir)
+		suite, err := framework.NewLoader(suiteDir).LoadSuite()
 		if err != nil {
 			return errors.Wrapf(err, "loading suite %q", suiteDir)
 		}
