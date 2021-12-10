@@ -12,13 +12,14 @@ type Test struct {
 
 	Name string `json:"name,omitempty"`
 
-	Values map[string]interface{} `json:"values,omitempty"`
-	Set    map[string]interface{} `json:"set,omitempty"`
-
-	Defs         string            `json:"defs,omitempty"`
-	Release      *ReleaseSpec      `json:"release,omitempty"`
-	Server       *ServerSpec       `json:"server,omitempty"`
-	Capabilities *CapabilitiesSpec `json:"capabilities,omitempty"`
+	Values       map[string]interface{} `json:"values,omitempty"`
+	Set          map[string]interface{} `json:"set,omitempty"`
+	Flavour      string                 `json:"flavour,omitempty"`
+	Condition    Condition              `json:"condition,omitempty"`
+	Defs         string                 `json:"defs,omitempty"`
+	Release      *ReleaseSpec           `json:"release,omitempty"`
+	Server       *ServerSpec            `json:"server,omitempty"`
+	Capabilities *CapabilitiesSpec      `json:"capabilities,omitempty"`
 
 	Expect      string `json:"expect,omitempty"`
 	ExpectError *bool  `json:"expectError,omitempty"`
@@ -30,6 +31,11 @@ type Test struct {
 
 	funcDefs   []*gojq.FuncDef
 	predicates []*gojq.Query
+}
+
+// Condition
+type Condition struct {
+	IfFlavour string `json:"ifFlavour,omitempty"`
 }
 
 // ReleaseSpec specifies how the release options for Helm will be constructed.

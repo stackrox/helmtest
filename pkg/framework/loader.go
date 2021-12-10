@@ -21,7 +21,7 @@ type Loader struct {
 // NewLoader returns a a loader and applies options to it.
 func NewLoader(rootDir string, opts ...LoaderOpt) *Loader {
 	loader := Loader{
-		rootDir: rootDir,
+		rootDir:     rootDir,
 		globPattern: defaultTestFileGlobPattern,
 	}
 
@@ -46,6 +46,48 @@ func (loader *Loader) LoadSuite() (*Test, error) {
 	var suite Test
 	if err := unmarshalYamlFromFileStrict(filepath.Join(loader.rootDir, "suite.yaml"), &suite); err != nil && !os.IsNotExist(err) {
 		return nil, errors.Wrap(err, "loading suite specification")
+	}
+
+	if suite.Name == "" {
+		suite.Name = strings.TrimRight(loader.rootDir, "/")
+	}
+
+	// Locate test files, if any.
+	testYAMLFiles, err := filepath.Glob(filepath.Join(loader.rootDir, loader.globPattern))
+	if err != nil {
+		return nil, errors.Wrap(err, "globbing for .test.yaml files")
+	}
+
+	for _, file := range testYAMLFiles {
+		test := Test{
+			parent: &suite,
+		}
+		if err := unmarshalYamlFromFileStrict(file, &test); err != nil {
+			return nil, errors.Wrapf(err, "loading test specification from file %s", file)
+		}
+		if test.Name == "" {
+			test.Name = filepath.Base(file)
+		}
+		suite.Tests = append(suite.Tests, &test)
+	}
+
+	if err := suite.initialize(); err != nil {
+		return nil, err
+	}
+
+	return &suite, nil
+}
+
+// LoadSuiteWithFlavour loads a helmtest suite from the given directory with a specific flavour pre-configured.
+func (loader *Loader) LoadSuiteWithFlavour(defaultFlavour string) (*Test, error) {
+	var suite Test
+
+	if err := unmarshalYamlFromFileStrict(filepath.Join(loader.rootDir, "suite.yaml"), &suite); err != nil && !os.IsNotExist(err) {
+		return nil, errors.Wrap(err, "loading suite specification")
+	}
+
+	if suite.Flavour == "" {
+		suite.Flavour = defaultFlavour
 	}
 
 	if suite.Name == "" {
