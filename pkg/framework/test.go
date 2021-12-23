@@ -144,3 +144,23 @@ func (t *Test) forEachScopeTopDown(doFn func(t *Test)) {
 	}
 	doFn(t)
 }
+
+// find tries to find a test under a given path where the path's index represents the level of the test.
+func (t *Test) find(path []string) *Test {
+	if t == nil || len(path) == 0 {
+		return nil
+	}
+
+	if len(path) == 1 && t.Name == path[0] {
+		return t
+	}
+
+	for _, child := range t.Tests {
+		found := child.find(path[1:])
+		if found != nil {
+			return found
+		}
+	}
+
+	return nil
+}
