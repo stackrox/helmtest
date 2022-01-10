@@ -25,6 +25,8 @@ func TestFind(t *testing.T) {
 		Tests: []*Test{
 			childTest,
 			anotherChildTest,
+			{Name: "same name"},
+			{Name: "same name"},
 		},
 	}
 
@@ -40,15 +42,18 @@ func TestFind(t *testing.T) {
 		"with not existing root":    {query: []string{"root does not exist"}, expectNotFound: true},
 		"with another child":        {query: []string{"root test", "another child test"}},
 		"with another nested child": {query: []string{"root test", "another child test", "another child child test"}},
+		"with same name finds both": {query: []string{"root test", "same name"}},
 	}
 
 	for _, tt := range testCases {
-		r := suite.find(tt.query)
+		results := suite.find(tt.query)
 		if tt.expectNotFound {
-			assert.Nil(t, r)
+			assert.Nil(t, results)
 		} else {
-			require.NotNil(t, r)
-			assert.Equal(t, tt.query[len(tt.query)-1], r.Name)
+			require.NotEmpty(t, results)
+			for _, result := range results {
+				assert.Equal(t, tt.query[len(tt.query)-1], result.Name)
+			}
 		}
 	}
 }
