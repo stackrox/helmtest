@@ -43,6 +43,7 @@ func TestFind(t *testing.T) {
 		"with another child":        {query: []string{"root test", "another child test"}},
 		"with another nested child": {query: []string{"root test", "another child test", "another child child test"}},
 		"with same name finds both": {query: []string{"root test", "same name"}},
+		"with not existent root should not be found": {query: []string{"non-existent root test", "child test"}, expectNotFound: true},
 	}
 
 	for _, tt := range testCases {
