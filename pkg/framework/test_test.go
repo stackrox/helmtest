@@ -2,6 +2,7 @@ package framework
 
 import (
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
@@ -28,17 +29,17 @@ func TestFind(t *testing.T) {
 	}
 
 	rootQuery := []string{"root test"}
-	testCases := map[string]struct{
-	query            []string
-	expectNotFound   bool
-}{
-		"with only root node": {query: rootQuery},
-		"with child test": {query: append(rootQuery, "child test")},
-		"with nested child": {query: append(rootQuery, "child test", "child child test")},
-		"with not existing nested": {query: append(rootQuery, "child test", "child child test", "does not exist"), expectNotFound: true},
-		"with not existing root": {query: []string{"root does not exist"}, expectNotFound: true},
-		"with another child": {query: append(rootQuery, "another child test")},
-		"with another nested child": {query: append(rootQuery, "another child test", "another child child test")},
+	testCases := map[string]struct {
+		query          []string
+		expectNotFound bool
+	}{
+		"with only root node":       {query: rootQuery},
+		"with child test":           {query: []string{"root test", "child test"}},
+		"with nested child":         {query: []string{"root test", "child test", "child child test"}},
+		"with not existing nested":  {query: []string{"root test", "child test", "child child test", "does not exist"}, expectNotFound: true},
+		"with not existing root":    {query: []string{"root does not exist"}, expectNotFound: true},
+		"with another child":        {query: []string{"root test", "another child test"}},
+		"with another nested child": {query: []string{"root test", "another child test", "another child child test"}},
 	}
 
 	for _, tt := range testCases {
@@ -46,6 +47,7 @@ func TestFind(t *testing.T) {
 		if tt.expectNotFound {
 			assert.Nil(t, r)
 		} else {
+			require.NotNil(t, r)
 			assert.Equal(t, tt.query[len(tt.query)-1], r.Name)
 		}
 	}

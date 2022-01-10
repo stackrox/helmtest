@@ -151,7 +151,10 @@ func (t *Test) find(path []string) *Test {
 		return nil
 	}
 
-	if len(path) == 1 && t.Name == path[0] {
+	if path[0] != t.Name {
+		return nil
+	}
+	if len(path) == 1 {
 		return t
 	}
 
