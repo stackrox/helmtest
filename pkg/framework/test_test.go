@@ -30,12 +30,11 @@ func TestFind(t *testing.T) {
 		},
 	}
 
-	rootQuery := []string{"root test"}
 	testCases := map[string]struct {
 		query          []string
 		expectNotFound bool
 	}{
-		"with only root node":       {query: rootQuery},
+		"with only root node":       {query: []string{"root test"}},
 		"with child test":           {query: []string{"root test", "child test"}},
 		"with nested child":         {query: []string{"root test", "child test", "child child test"}},
 		"with not existing nested":  {query: []string{"root test", "child test", "child child test", "does not exist"}, expectNotFound: true},
