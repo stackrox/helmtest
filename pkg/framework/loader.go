@@ -14,8 +14,9 @@ const (
 
 // Loader loads a test suite.
 type Loader struct {
-	globPattern string
-	rootDir     string
+	globPattern        string
+	rootDir            string
+	additionalTestDirs []string
 }
 
 // NewLoader returns a a loader and applies options to it.
@@ -41,6 +42,13 @@ func WithCustomFilePattern(pattern string) LoaderOpt {
 	}
 }
 
+// WithAdditionalTestSourceDirs adds additional test source directories which are scanned for tests.
+func WithAdditionalTestSourceDirs(path ...string) LoaderOpt {
+	return func(loader *Loader) {
+		loader.additionalTestDirs = append(loader.additionalTestDirs, path...)
+	}
+}
+
 // LoadSuite loads a helmtest suite from the given directory.
 func (loader *Loader) LoadSuite() (*Test, error) {
 	var suite Test
@@ -52,10 +60,9 @@ func (loader *Loader) LoadSuite() (*Test, error) {
 		suite.Name = strings.TrimRight(loader.rootDir, "/")
 	}
 
-	// Locate test files, if any.
-	testYAMLFiles, err := filepath.Glob(filepath.Join(loader.rootDir, loader.globPattern))
+	testYAMLFiles, err := loader.readTestYAMLFiles()
 	if err != nil {
-		return nil, errors.Wrap(err, "globbing for .test.yaml files")
+		return nil, err
 	}
 
 	for _, file := range testYAMLFiles {
@@ -76,4 +83,20 @@ func (loader *Loader) LoadSuite() (*Test, error) {
 	}
 
 	return &suite, nil
+}
+
+// readTestYAMLFiles locates test files, if any.
+func (loader Loader) readTestYAMLFiles() ([]string, error) {
+	var testYAMLFiles []string
+	for _, dir := range append(loader.additionalTestDirs, loader.rootDir) {
+		dirGlob := filepath.Join(dir, loader.globPattern)
+
+		yamlFiles, err := filepath.Glob(dirGlob)
+		if err != nil {
+			return nil, errors.Wrapf(err, "globbing for %s files", dirGlob)
+		}
+		testYAMLFiles = append(testYAMLFiles, yamlFiles...)
+	}
+
+	return testYAMLFiles, nil
 }
