@@ -88,9 +88,17 @@ func (t *Test) initialize() error {
 
 	for i, subTest := range t.Tests {
 		subTest.parent = t
+		if subTest.Flavour == "" {
+			subTest.Flavour = t.Flavour
+		}
 		if subTest.Name == "" {
 			subTest.Name = fmt.Sprintf("#%d", i)
 		}
+
+		if subTest.Flavour != "" {
+			subTest.Name = fmt.Sprintf("%s(%s)", subTest.Name, subTest.Flavour)
+		}
+
 		if err := subTest.initialize(); err != nil {
 			return errors.Wrapf(err, "initializing %q", subTest.Name)
 		}
@@ -114,6 +122,11 @@ func (t *Test) DoRun(testingT *testing.T, tgt *Target) {
 		for _, subTest := range t.Tests {
 			subTest.Run(testingT, tgt)
 		}
+		return
+	}
+
+	if t.Condition.IfFlavour != "" && t.Condition.IfFlavour != t.Flavour {
+		// We skip the test.
 		return
 	}
 
