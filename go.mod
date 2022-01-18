@@ -13,5 +13,6 @@ require (
 	k8s.io/apimachinery v0.22.2
 	k8s.io/kube-openapi v0.0.0-20211025214626-d9a0cc0561b2
 	k8s.io/kubectl v0.22.2
+	k8s.io/utils v0.0.0-20211208161948-7d6a63dca704 // indirect
 	sigs.k8s.io/yaml v1.3.0
 )
