@@ -1,0 +1,9 @@
+tests:
+  - name: test in helm.test.yaml
+    values:
+      testValue: value
+
+    tests:
+      - name: with overwrites
+        values:
+          testValue: value overwrite

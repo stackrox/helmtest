@@ -1,0 +1,4 @@
+tests:
+  - name: test in additional.test.yaml
+    values:
+      additional: additionalValue

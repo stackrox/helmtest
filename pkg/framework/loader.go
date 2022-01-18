@@ -1,6 +1,7 @@
 package framework
 
 import (
+	"k8s.io/utils/strings/slices"
 	"os"
 	"path/filepath"
 	"strings"
@@ -9,20 +10,19 @@ import (
 )
 
 const (
-	defaultTestFileGlobPattern = "*.test.yaml"
+	testFileGlobPattern = "*.test.yaml"
 )
 
 // Loader loads a test suite.
 type Loader struct {
-	globPattern string
-	rootDir     string
+	rootDir            string
+	additionalTestDirs []string
 }
 
 // NewLoader returns a a loader and applies options to it.
 func NewLoader(rootDir string, opts ...LoaderOpt) *Loader {
 	loader := Loader{
 		rootDir: rootDir,
-		globPattern: defaultTestFileGlobPattern,
 	}
 
 	for _, opt := range opts {
@@ -34,10 +34,10 @@ func NewLoader(rootDir string, opts ...LoaderOpt) *Loader {
 // LoaderOpts allows to set custom options.
 type LoaderOpt func(loader *Loader)
 
-// WithCustomFilePattern sets a custom file pattern to load test files.
-func WithCustomFilePattern(pattern string) LoaderOpt {
+// WithAdditionalTestDirs adds additional test source directories which are scanned for tests.
+func WithAdditionalTestDirs(path ...string) LoaderOpt {
 	return func(loader *Loader) {
-		loader.globPattern = pattern
+		loader.additionalTestDirs = append(loader.additionalTestDirs, path...)
 	}
 }
 
@@ -52,10 +52,9 @@ func (loader *Loader) LoadSuite() (*Test, error) {
 		suite.Name = strings.TrimRight(loader.rootDir, "/")
 	}
 
-	// Locate test files, if any.
-	testYAMLFiles, err := filepath.Glob(filepath.Join(loader.rootDir, loader.globPattern))
+	testYAMLFiles, err := loader.readTestYAMLFiles()
 	if err != nil {
-		return nil, errors.Wrap(err, "globbing for .test.yaml files")
+		return nil, err
 	}
 
 	for _, file := range testYAMLFiles {
@@ -76,4 +75,28 @@ func (loader *Loader) LoadSuite() (*Test, error) {
 	}
 
 	return &suite, nil
+}
+
+// readTestYAMLFiles locates test files, if any.
+func (loader *Loader) readTestYAMLFiles() ([]string, error) {
+	var testYAMLFiles []string
+	var scannedDirs []string
+
+	dirs := append(loader.additionalTestDirs, loader.rootDir)
+	for _, dir := range dirs {
+		if slices.Contains(scannedDirs, dir) {
+			continue
+		}
+
+		dirGlob := filepath.Join(dir, testFileGlobPattern)
+
+		yamlFiles, err := filepath.Glob(dirGlob)
+		if err != nil {
+			return nil, errors.Wrapf(err, "resolving files using wildcard pattern %s", dirGlob)
+		}
+		testYAMLFiles = append(testYAMLFiles, yamlFiles...)
+		scannedDirs = append(scannedDirs, dir)
+	}
+
+	return testYAMLFiles, nil
 }
