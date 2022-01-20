@@ -2,3 +2,6 @@ tests:
   - name: test in additional.test.yaml
     values:
       additional: additionalValue
+  - name: use def in additional.test.yaml
+    expect: |
+      checkName({})

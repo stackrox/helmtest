@@ -1,2 +1,6 @@
+defs: |
+  def checkName(obj; name):
+    obj | select(.name == name);
+
 tests:
   - name: test in suite.yaml
