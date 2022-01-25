@@ -1,4 +1,4 @@
 tests:
-  - name: "use defined function"
+  - name: "use inhereited defined function"
     expect:
-      container(.deployments.nginx, nginx) | assertThat(. != null)
+      container(.deployments.nginx; "nginx") | assertThat(. != null)
