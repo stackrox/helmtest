@@ -1,0 +1,4 @@
+tests:
+  - name: "use defined function"
+    expect:
+      container(.deployments.nginx, nginx) | assertThat(. != null)

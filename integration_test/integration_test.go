@@ -9,7 +9,7 @@ import (
 )
 
 func TestHelmTestShouldSucceed(t *testing.T) {
-	l := framework.NewLoader("testdata/helmtest")
+	l := framework.NewLoader("testdata/helmtest", framework.WithAdditionalTestDirs("testdata/helmtest/additional_directory"))
 	s, err := l.LoadSuite()
 	require.NoError(t, err)
 
