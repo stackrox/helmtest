@@ -1,0 +1,33 @@
+name: helmtest CI
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout VCS
+        uses: actions/checkout@v2
+
+      - name: Prepare environment
+        run: |
+          go_version=$(cat EXPECTED_GO_VERSION)
+          echo "GO_VERSION=$go_version" >> $GITHUB_ENV
+
+      - name: Setup GO
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Build
+        run: make build
+
+      - name: Test
+        run: make test
+
+      - name: Lint
+        run: make golangci-lint
