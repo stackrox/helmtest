@@ -5,9 +5,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"k8s.io/utils/strings/slices"
-
 	"github.com/pkg/errors"
+	"k8s.io/utils/strings/slices"
 )
 
 const (
