@@ -1,19 +1,20 @@
 package framework
 
 import (
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestLoader(t *testing.T) {
 	const testdataPath = "testdata/suite"
 
 	tests := map[string]struct {
-	opts          []LoaderOpt
-	expectedFunc  func(*testing.T, *Test)
-	additionalDir string
-}{
+		opts          []LoaderOpt
+		expectedFunc  func(*testing.T, *Test)
+		additionalDir string
+	}{
 		"With root dir": {
 			expectedFunc: func(t *testing.T, helmTest *Test) {
 				assert.Len(t, helmTest.Tests, 2)
@@ -24,7 +25,7 @@ func TestLoader(t *testing.T) {
 				require.Len(t, test.Tests[1].Tests, 1)
 				childTest := test.findFirst([]string{testdataPath, "helm.test.yaml", "test in helm.test.yaml", "with overwrites"})
 				assert.Equal(t, "with overwrites", childTest.Name)
-				assert.Equal(t, map[string]interface {}{"testValue":"value overwrite"}, childTest.Values)
+				assert.Equal(t, map[string]interface{}{"testValue": "value overwrite"}, childTest.Values)
 			},
 		},
 		"Loader loads additional dir": {
