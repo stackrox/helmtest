@@ -25,5 +25,5 @@ either write
 ```
 .objects[] | select(.metadata.kind == "Deployment" and .metadata.name == "server")
 ```
-or simply `.deployments.server`. If there are deployments named `server` in multiple distinct
-namespaces (which shouldn't usually be the case with Helm charts), however, `.deployments.server` will be undefined.
+or simply `.deployments.server`. Note that since Helm releases should be confined to a single namespace, two or more
+resources of the same kind and with the same name will be treated as an error.

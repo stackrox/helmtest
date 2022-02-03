@@ -79,31 +79,12 @@ World model
 
 As stated above, expectations are written as `jq` filters (using `gojq` as an evaluation engine). Generally, a filter
 that evaluates to a "falsy" value is treated as a violation. In contrast to normal JS/`jq` semantics, an empty list,
-object, or string will also be treated as "falsy". The input to those filters is a JSON object with the following
-fields:
-- `helm` contains the render values passed to Helm, such as `.Values`, `.Release`, `.Capabilities`, `.Chart` etc.
-- `error` contains the rendering error message, if any. This will only be set when an error occurred. Note that if you
-  want to check assertions on the error message, you _must_ still set `expectError: true`, otherwise the test will fail.
-- `objects` contains all Kubernetes objects from all rendered YAML files as a JSON array. This will only be set when
-  no error occurred.
-- `notes` contains the output of the rendered `NOTES.txt`. This will only be set when no error occurred.
-
-In addition, for every Kubernetes object kind, there will be an entry using the lowercase plural form of the object
-kind as the key, and containing a name-indexed object of all Kubernetes objects as the value. To locate the deployment
-"sensor", you can thus either write
-`.objects[] | select(.metadata.kind == "Deployment" and .metadata.name == "sensor")`, or simply `.deployments.sensor`.
+object, or string will also be treated as "falsy". The input to those filters (i.e., the `.` value at the start of
+each `jq` pipeline) is a JSON object containing anything that is relevant to the test execution, referred to as the
+"world". See [the world model documentation](./docs/world-model.md) for an explanation of what it contains.
 
 Special functions
 ===============
 
-In addition to the standard `jq` functions, you can use the following ones:
-- `fromyaml`, `toyaml` - the equivalent of `fromjson` and `tojson` for YAML.
-- `assertNotExist` - this function will fail if ever executed. Semantically equivalent to just writing `false`, but
-  with the advantage that the offending object is printed.
-- `assertThat(f)` - asserts that a filter `f` holds for the input object. If `. | f` evaluates to `false`, this will
-  print the value of `.` as well as the original string representation of `f`. Hence, while `... | .name == "foo"` and
-  `| assertThat(.name == "foo")` are semantically equivalent, the latter is preferable as it is much easier to debug.
-- `assumeThat(f)` - assumes that a filter `f` holds for the input object. If it doesn't, the evaluation is aborted for
-  the given input object, and no failure is triggered.
-- `print` - prints input directly with `fmt.Println` and returns it, i.e. to print all objects in a test as
-   `yaml` write `.objects[] | toyaml | print`.
+See the [documentation on functions](./docs/functions.md) for an overview of what functions are available in filters,
+beyond the ones known from `jq`.
