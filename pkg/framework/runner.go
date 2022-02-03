@@ -285,13 +285,14 @@ func (r *runner) evaluatePredicates(world map[string]interface{}) {
 	})
 
 	for _, pred := range allPreds {
-		code, err := compiler.Compile(pred)
+		code, err := compiler.Compile(pred, gojq.WithVariables([]string{"$_"}))
 
 		if !r.Assert().NoErrorf(err, "failed to compile predicate %q", pred) {
 			continue
 		}
 
-		iter := code.Run(runtime.DeepCopyJSON(world))
+		worldCopy := runtime.DeepCopyJSON(world)
+		iter := code.Run(worldCopy, worldCopy)
 		hadElem := false
 		for result, ok := iter.Next(); ok; result, ok = iter.Next() {
 			hadElem = true
