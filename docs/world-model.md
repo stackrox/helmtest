@@ -2,8 +2,10 @@
 
 The world model describes everything that is available for you to reason about in your test expectations. It contains,
 among other things, the parsed rendering output, the message generated from `NOTES.txt`, error messages (if any)
-as well as the input values. The "world" is given as a JSON object, and is used as the input for every `jq` filter
-that is evaluated as an expectation.
+as well as the input values. The "world" is given as a JSON object, and is used as the input (`.` at the beginning of
+the pipeline) for every `jq` filter that is evaluated as an expectation. To allow referencing properties of the world
+model in custom functions, where `.` might not have its original value, the world object can also be referenced via
+the `$_` variable.
 
 This JSON object contains the following properties:
 - `helm`: a JSON object representing the values passed to the Helm rendering engine, such as `Values`, `Release`,
