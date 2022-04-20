@@ -1,10 +1,11 @@
 package framework
 
 import (
-	"k8s.io/utils/strings/slices"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"k8s.io/utils/strings/slices"
 
 	"github.com/pkg/errors"
 )
@@ -31,7 +32,7 @@ func NewLoader(rootDir string, opts ...LoaderOpt) *Loader {
 	return &loader
 }
 
-// LoaderOpts allows to set custom options.
+// LoaderOpt allows to set custom options.
 type LoaderOpt func(loader *Loader)
 
 // WithAdditionalTestDirs adds additional test source directories which are scanned for tests.
@@ -82,7 +83,8 @@ func (loader *Loader) readTestYAMLFiles() ([]string, error) {
 	var testYAMLFiles []string
 	var scannedDirs []string
 
-	dirs := append(loader.additionalTestDirs, loader.rootDir)
+	dirs := loader.additionalTestDirs
+	dirs = append(dirs, loader.rootDir)
 	for _, dir := range dirs {
 		if slices.Contains(scannedDirs, dir) {
 			continue
