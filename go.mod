@@ -7,12 +7,12 @@ require (
 	github.com/googleapis/gnostic v0.5.5
 	github.com/itchyny/gojq v0.12.5
 	github.com/pkg/errors v0.9.1
-	github.com/stretchr/testify v1.7.0
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
-	helm.sh/helm/v3 v3.7.1
-	k8s.io/apimachinery v0.22.2
-	k8s.io/kube-openapi v0.0.0-20211025214626-d9a0cc0561b2
-	k8s.io/kubectl v0.22.2
-	k8s.io/utils v0.0.0-20211208161948-7d6a63dca704
+	github.com/stretchr/testify v1.7.2
+	gopkg.in/yaml.v3 v3.0.1
+	helm.sh/helm/v3 v3.9.4
+	k8s.io/apimachinery v0.24.2
+	k8s.io/kube-openapi v0.0.0-20220627174259-011e075b9cb8
+	k8s.io/kubectl v0.24.2
+	k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9
 	sigs.k8s.io/yaml v1.3.0
 )
