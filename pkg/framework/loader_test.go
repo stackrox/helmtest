@@ -25,7 +25,7 @@ func TestLoader(t *testing.T) {
 				require.Len(t, test.Tests[1].Tests, 1)
 				childTest := test.findFirst([]string{testdataPath, "helm.test.yaml", "test in helm.test.yaml", "with overwrites"})
 				assert.Equal(t, "with overwrites", childTest.Name)
-				assert.Equal(t, map[string]interface{}{"testValue": "value overwrite"}, childTest.Values)
+				assert.EqualValues(t, map[string]interface{}{"testValue": "value overwrite"}, childTest.Values)
 			},
 		},
 		"Loader loads additional dir": {
