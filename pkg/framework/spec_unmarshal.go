@@ -3,10 +3,11 @@ package framework
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
+
 	"github.com/stackrox/helmtest/internal/parser"
 	yamlv3 "gopkg.in/yaml.v3"
 	"sigs.k8s.io/yaml"
-	"strings"
 )
 
 const (

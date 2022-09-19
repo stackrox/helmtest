@@ -12,13 +12,13 @@ import (
 
 	"github.com/stackrox/helmtest/internal/compiler"
 	"github.com/stackrox/helmtest/internal/logic"
+	"github.com/stackrox/helmtest/internal/parser"
 	"github.com/stackrox/helmtest/internal/rox-imported/sliceutils"
 	"github.com/stackrox/helmtest/internal/rox-imported/stringutils"
 	"github.com/stackrox/helmtest/internal/schemas"
 
 	"github.com/itchyny/gojq"
 	"github.com/pkg/errors"
-	"github.com/stackrox/helmtest/internal/parser"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"helm.sh/helm/v3/pkg/chartutil"
