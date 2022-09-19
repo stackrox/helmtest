@@ -5,6 +5,10 @@ import (
 	"github.com/stackrox/helmtest/internal/parser"
 )
 
+// RawDict is an alias for map[string]interface{}, that is needed because `yaml.Unmarshal` and `json.Unmarshal` differ
+// in that the latter will never produce int values, while the former may.
+type RawDict map[string]interface{}
+
 // Test defines a helmtest test. A Test can be regarded as the equivalent of the *testing.T scope of a Go unit test.
 // Tests are scoped, and a test may either define concrete expectations, or contain an arbitrary number of nested tests.
 // See README.md in this directory for a more detailed explanation.
@@ -13,8 +17,8 @@ type Test struct {
 
 	Name string `json:"name,omitempty" yaml:"name,omitempty"`
 
-	Values map[string]interface{} `json:"values,omitempty" yaml:"values,omitempty"`
-	Set    map[string]interface{} `json:"set,omitempty" yaml:"set,omitempty"`
+	Values RawDict `json:"values,omitempty" yaml:"values,omitempty"`
+	Set    RawDict `json:"set,omitempty" yaml:"set,omitempty"`
 
 	Defs         string            `json:"defs,omitempty" yaml:"defs,omitempty"`
 	Release      *ReleaseSpec      `json:"release,omitempty" yaml:"release,omitempty"`

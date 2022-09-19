@@ -23,6 +23,7 @@ func ParseExpectations(spec string, sctx SourceContext) ([]*ParsedQuery, error) 
 			Line:     0,
 		}
 	}
+	currentSCtx := sctx
 	for ; scanned; sctx.Line++ {
 		scanned = scanner.Scan()
 		var next string
@@ -41,16 +42,25 @@ func ParseExpectations(spec string, sctx SourceContext) ([]*ParsedQuery, error) 
 		}
 
 		if current != "" {
-			query, err := ParseQuery(current, sctx)
+			query, err := ParseQuery(current, currentSCtx)
 			if err != nil {
 				return nil, errors.Wrapf(err, "parsing query ending at %s", sctx)
 			}
 			queries = append(queries, query)
 		}
 		current = next
+		currentSCtx = sctx
 	}
 	if err := scanner.Err(); err != nil {
 		return nil, errors.Wrap(err, "parsing expectations")
+	}
+
+	if current != "" {
+		query, err := ParseQuery(current, currentSCtx)
+		if err != nil {
+			return nil, errors.Wrapf(err, "parsing query ending at %s", sctx)
+		}
+		queries = append(queries, query)
 	}
 
 	return queries, nil

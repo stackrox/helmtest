@@ -17,5 +17,5 @@ func (c SourceContext) String() string {
 }
 
 func (c *SourceContext) IsZero() bool {
-	return c.Filename != "" || c.Line != 0
+	return c.Filename == "" && c.Line == 0
 }

@@ -315,12 +315,13 @@ func (r *runner) evaluatePredicates(world map[string]interface{}) {
 		if len(errMsgs) == 0 {
 			continue
 		}
-		fullMsg := fmt.Sprintf("predicate:\n  %s\n", pred.Source)
+		fullMsg := "predicate"
 		if sctx := pred.SourceCtx; !sctx.IsZero() {
-			fullMsg += fmt.Sprintf("at:\n  %s\n", sctx)
+			fullMsg += fmt.Sprintf(" at %s", sctx)
 		}
+		fullMsg += fmt.Sprintf(":\n  %s\nerrors:\n", pred.Source)
 		for _, errMsg := range errMsgs {
-			fullMsg += fmt.Sprintf("* %s\n", errMsg)
+			fullMsg += fmt.Sprintf("  %s\n", errMsg)
 		}
 		r.Assert().Failf(fullMsg, "error(s) evaluating predicate %q", pred)
 	}
