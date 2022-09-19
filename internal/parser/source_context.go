@@ -2,7 +2,7 @@ package parser
 
 import "fmt"
 
-// SourceContext
+// SourceContext stores information about location in a source file.
 type SourceContext struct {
 	Filename string
 	Line     int
