@@ -13,7 +13,7 @@ func (c SourceContext) String() string {
 	if filename == "" {
 		filename = "<input>"
 	}
-	return fmt.Sprintf("%s:%d", filename, c.Line+1)
+	return fmt.Sprintf("%s:%d", filename, c.Line+1) // c.Line is zero-based, add 1 for human-readable
 }
 
 func (c *SourceContext) IsZero() bool {
