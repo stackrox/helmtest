@@ -24,6 +24,7 @@ func injectFilename(node *yamlv3.Node, filename string) {
 	}
 }
 
+// UnmarshalYAML unmarshals a test spec from YAML, preserving line information that we're interested in.
 func (t *Test) UnmarshalYAML(node *yamlv3.Node) error {
 	// Create an alias of this type without a custom UnmarshalYAML method.
 	type testNoMethods Test
