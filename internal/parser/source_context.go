@@ -8,6 +8,7 @@ type SourceContext struct {
 	Line     int
 }
 
+// String returns a human-readable string representation of this source context.
 func (c SourceContext) String() string {
 	filename := c.Filename
 	if filename == "" {
@@ -16,6 +17,7 @@ func (c SourceContext) String() string {
 	return fmt.Sprintf("%s:%d", filename, c.Line+1) // c.Line is zero-based, add 1 for human-readable
 }
 
+// IsZero checks whether this SourceContext is equal to the zero SourceContext.
 func (c *SourceContext) IsZero() bool {
 	return c.Filename == "" && c.Line == 0
 }
