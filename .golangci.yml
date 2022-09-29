@@ -100,7 +100,7 @@ linters:
     - revive
     - rowserrcheck
     # - scopelint
-    - staticcheck
+    # - staticcheck
     # - structcheck
     - stylecheck
     # - testpackage
