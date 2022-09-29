@@ -46,7 +46,10 @@ func (t *Test) UnmarshalYAML(node *yamlv3.Node) error {
 		}
 	}
 
-	// Check for mapping keys of interest.
+	// The Content slice of a Mapping node stores keys and values in an alternating fashion. That is, keys
+	// are stored at even indices, and the values mapped to those keys are stored at the odd indices following
+	// the respective key index.
+	// Here, we are only interested in certain mapping values for fields of interest, like 'expect'.
 	for i := 0; i < len(node.Content); i += 2 {
 		valueNode := node.Content[i+1]
 		valueSrcContext := parser.SourceContext{
