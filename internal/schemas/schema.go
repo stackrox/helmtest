@@ -3,7 +3,7 @@ package schemas
 import (
 	"strings"
 
-	openapi_v2 "github.com/googleapis/gnostic/openapiv2"
+	openapi_v2 "github.com/google/gnostic/openapiv2"
 	"github.com/pkg/errors"
 	"github.com/stackrox/helmtest/internal/rox-imported/set"
 	"gopkg.in/yaml.v3"
