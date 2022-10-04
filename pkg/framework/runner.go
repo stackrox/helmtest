@@ -4,17 +4,18 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"path"
 	"strings"
 	"testing"
 
-	"github.com/stackrox/helmtest/internal/schemas"
-
 	"github.com/stackrox/helmtest/internal/compiler"
 	"github.com/stackrox/helmtest/internal/logic"
+	"github.com/stackrox/helmtest/internal/parser"
 	"github.com/stackrox/helmtest/internal/rox-imported/sliceutils"
 	"github.com/stackrox/helmtest/internal/rox-imported/stringutils"
+	"github.com/stackrox/helmtest/internal/schemas"
 
 	"github.com/itchyny/gojq"
 	"github.com/pkg/errors"
@@ -271,7 +272,7 @@ func (r *runner) Run() {
 
 func (r *runner) evaluatePredicates(world map[string]interface{}) {
 	var allFuncDefs []*gojq.FuncDef
-	var allPreds []*gojq.Query
+	var allPreds []*parser.ParsedQuery
 
 	r.test.forEachScopeTopDown(func(t *Test) {
 		allFuncDefs = append(allFuncDefs, t.funcDefs...)
@@ -285,7 +286,7 @@ func (r *runner) evaluatePredicates(world map[string]interface{}) {
 	})
 
 	for _, pred := range allPreds {
-		code, err := compiler.Compile(pred, gojq.WithVariables([]string{"$_"}))
+		code, err := compiler.Compile(pred.Query, gojq.WithVariables([]string{"$_"}))
 
 		if !r.Assert().NoErrorf(err, "failed to compile predicate %q", pred) {
 			continue
@@ -294,17 +295,33 @@ func (r *runner) evaluatePredicates(world map[string]interface{}) {
 		worldCopy := runtime.DeepCopyJSON(world)
 		iter := code.Run(worldCopy, worldCopy)
 		hadElem := false
+		var errMsgs []string
 		for result, ok := iter.Next(); ok; result, ok = iter.Next() {
 			hadElem = true
 			err, _ := result.(error)
 			if errors.Is(err, logic.ErrAssumptionViolation) {
 				continue
 			}
-			if !r.Assert().NoErrorf(err, "failed to evaluate pred %q", pred) {
-				continue
+			if err != nil {
+				errMsgs = append(errMsgs, err.Error())
+			} else if !logic.Truthy(result) {
+				errMsgs = append(errMsgs, fmt.Sprintf("evaluated to falsy result %v", result))
 			}
-			r.Assert().True(logic.Truthy(result), "predicate %q evaluated to falsy result %v", pred, result)
 		}
-		r.Assert().Truef(hadElem, "predicate %q evaluated to empty sequence", pred)
+		if !hadElem {
+			errMsgs = append(errMsgs, "evaluated to empty sequence")
+		}
+		if len(errMsgs) == 0 {
+			continue
+		}
+		fullMsg := "predicate"
+		if sctx := pred.SourceCtx; !sctx.IsZero() {
+			fullMsg += fmt.Sprintf(" at %s", sctx)
+		}
+		fullMsg += fmt.Sprintf(":\n  %s\nerrors:\n", pred.Source)
+		for _, errMsg := range errMsgs {
+			fullMsg += fmt.Sprintf("  %s\n", errMsg)
+		}
+		r.Assert().Failf(fullMsg, "error(s) evaluating predicate %q", pred)
 	}
 }

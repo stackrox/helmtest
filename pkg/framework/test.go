@@ -36,7 +36,7 @@ func (t *Test) parseDefs() error {
 	if !strings.HasSuffix(defsStr, ";") {
 		return errors.New("definitions block must end with a semicolon")
 	}
-	parsedDefs, err := parser.ParseQuery(defsStr)
+	parsedDefs, err := parser.ParseQuery(defsStr, t.defsSrcCtx)
 	if err != nil {
 		return errors.Wrap(err, "parsing definitions")
 	}
@@ -53,7 +53,7 @@ func (t *Test) parsePredicates() error {
 		return nil
 	}
 
-	predicates, err := parser.ParseExpectations(expectStr)
+	predicates, err := parser.ParseExpectations(expectStr, t.expectSrcCtx)
 	if err != nil {
 		return errors.Wrap(err, "parsing expectations")
 	}
