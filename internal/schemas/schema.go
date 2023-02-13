@@ -62,5 +62,5 @@ func (s *schema) VersionSet() chartutil.VersionSet {
 		allVersions.Add(prefix + gvk.Version)
 		allVersions.Add(prefix + gvk.Version + "/" + gvk.Kind)
 	}
-	return allVersions.AsSortedSlice(func(i, j string) bool { return i < j })
+	return allVersions.AsSortedSlice(alphabetically)
 }
