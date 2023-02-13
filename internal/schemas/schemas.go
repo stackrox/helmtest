@@ -27,5 +27,16 @@ func (s Schemas) VersionSet() chartutil.VersionSet {
 	for _, subSchema := range s {
 		allVersions.AddAll(subSchema.VersionSet()...)
 	}
-	return allVersions.AsSortedSlice(func(a, b string) bool { return a < b })
+	return allVersions.AsSortedSlice(alphabetically)
 }
+
+// GetConsumes returns the set of all consumes supported by the schemas.
+func (s Schemas) GetConsumes(gvk k8sSchema.GroupVersionKind, operation string) []string {
+	consumes := set.NewStringSet()
+	for _, subSchema := range s {
+		consumes.AddAll(subSchema.GetConsumes(gvk, operation)...)
+	}
+	return consumes.AsSortedSlice(alphabetically)
+}
+
+func alphabetically(a, b string) bool { return a < b }
