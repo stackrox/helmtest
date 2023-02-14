@@ -1,3 +1,11 @@
+defs: |
+  def container(obj; name):
+    obj.spec.template.spec.containers[] | select(.name == name);
 server:
   visibleSchemas:
     - kubernetes-1.20.2
+
+tests:
+  - name: "use defined function"
+    expect:
+      container(.deployments.nginx; "nginx") | assertThat(. != null)
