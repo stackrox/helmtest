@@ -88,3 +88,27 @@ Special functions
 
 See the [documentation on functions](./docs/functions.md) for an overview of what functions are available in filters,
 beyond the ones known from `jq`.
+
+Debugging
+===============
+
+**Run a single test:**
+
+To get the name of a single test:
+1. Run the whole test suite
+2. Look up the test to execute
+3. Copy the complete name from the CLI (or logs)
+
+```
+$ go test -run "TestWithHelmtest/testdata/helmtest/some_values.test.yaml/some_example_test"
+```
+
+**Print rendered manifests and values:**
+
+```
+- name: "some example test"
+  expect: |
+    .helm[]| toyaml | print                  ## Print all Helm values
+    .secrets["secret-name"] | toyaml | print ## Print a specific object
+    .objectss[]| toyaml | print              ## Print the complete rendered Helm chart
+```
