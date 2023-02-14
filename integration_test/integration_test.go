@@ -23,6 +23,7 @@ func TestHelmTestShouldSucceed(t *testing.T) {
 			Name:      "nginx-lb",
 			Namespace: "loadbalancer",
 			IsInstall: true,
+			IsUpgrade: false,
 		},
 	}
 

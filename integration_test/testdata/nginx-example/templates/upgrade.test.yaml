@@ -1,0 +1,8 @@
+{{ if .Release.IsUpgrade }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: some-secret-on-upgrade
+data:
+  .secret-file: some-data
+{{ end }}

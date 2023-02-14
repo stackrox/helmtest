@@ -1,3 +1,10 @@
 server:
   visibleSchemas:
     - kubernetes-1.20.2
+
+tests:
+  - name: "Expect secret to be rendered on upgrades"
+    release:
+      isUpgrade: true
+    expect: |
+      .secrets["some-secret-on-upgrade"] | assertThat(. != null)
