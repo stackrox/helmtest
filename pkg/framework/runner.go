@@ -277,11 +277,11 @@ func (r *runner) evaluatePredicates(world map[string]interface{}) {
 	r.test.forEachScopeTopDown(func(t *Test) {
 		allFuncDefs = append(allFuncDefs, t.funcDefs...)
 		for _, pred := range t.predicates {
-			predWithFuncs := *pred
+			predWithFuncs := pred.Copy()
 			predWithFuncs.FuncDefs = make([]*gojq.FuncDef, 0, len(allFuncDefs)+len(pred.FuncDefs))
 			predWithFuncs.FuncDefs = append(predWithFuncs.FuncDefs, allFuncDefs...)
 			predWithFuncs.FuncDefs = append(predWithFuncs.FuncDefs, pred.FuncDefs...)
-			allPreds = append(allPreds, &predWithFuncs)
+			allPreds = append(allPreds, predWithFuncs)
 		}
 	})
 
