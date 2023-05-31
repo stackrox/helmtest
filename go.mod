@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/golangci/golangci-lint v1.52.2
-	github.com/google/gnostic v0.5.7-v3refs
+	github.com/google/gnostic v0.6.9
 	github.com/itchyny/gojq v0.12.5
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.2
