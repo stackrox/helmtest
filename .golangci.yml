@@ -4,6 +4,11 @@ run:
 issues:
   exclude-use-default: false
 
+  exclude-rules:
+  - linters:
+      - revive
+    text: "should have a package comment"
+
 linters-settings:
   govet:
     enable-all: true
