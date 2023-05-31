@@ -7,7 +7,7 @@ require (
 	github.com/google/gnostic v0.6.9
 	github.com/itchyny/gojq v0.12.12
 	github.com/pkg/errors v0.9.1
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.8.4
 	gopkg.in/yaml.v3 v3.0.1
 	helm.sh/helm/v3 v3.11.1
 	k8s.io/apimachinery v0.27.2
