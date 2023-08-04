@@ -27,7 +27,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/yaml"
 	"k8s.io/kubectl/pkg/util/openapi"
-	"k8s.io/kubectl/pkg/validation"
+	"k8s.io/kubectl/pkg/util/openapi/validation"
 	k8sYaml "sigs.k8s.io/yaml"
 )
 
