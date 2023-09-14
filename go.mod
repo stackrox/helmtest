@@ -9,7 +9,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.4
 	gopkg.in/yaml.v3 v3.0.1
-	helm.sh/helm/v3 v3.12.2
+	helm.sh/helm/v3 v3.12.3
 	k8s.io/apimachinery v0.27.4
 	k8s.io/kube-openapi v0.0.0-20230501164219-8b0f38b5fd1f
 	k8s.io/kubectl v0.27.4
@@ -231,10 +231,10 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	honnef.co/go/tools v0.4.3 // indirect
 	k8s.io/api v0.27.4 // indirect
-	k8s.io/apiextensions-apiserver v0.27.2 // indirect
+	k8s.io/apiextensions-apiserver v0.27.3 // indirect
 	k8s.io/cli-runtime v0.27.4 // indirect
 	k8s.io/client-go v0.27.4 // indirect
-	k8s.io/klog/v2 v2.90.1 // indirect
+	k8s.io/klog/v2 v2.100.1 // indirect
 	mvdan.cc/gofumpt v0.5.0 // indirect
 	mvdan.cc/interfacer v0.0.0-20180901003855-c20040233aed // indirect
 	mvdan.cc/lint v0.0.0-20170908181259-adc824a0674b // indirect
