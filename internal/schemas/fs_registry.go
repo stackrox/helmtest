@@ -4,7 +4,7 @@ import (
 	"io/fs"
 	"sync"
 
-	openapi_v2 "github.com/google/gnostic/openapiv2"
+	openapi_v2 "github.com/google/gnostic-models/openapiv2"
 	"github.com/pkg/errors"
 	"github.com/stackrox/helmtest/internal/rox-imported/gziputil"
 )
