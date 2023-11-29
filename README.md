@@ -110,5 +110,5 @@ $ go test -run "TestWithHelmtest/testdata/helmtest/some_values.test.yaml/some_ex
   expect: |
     .helm[]| toyaml | print                  ## Print all Helm values
     .secrets["secret-name"] | toyaml | print ## Print a specific object
-    .objectss[]| toyaml | print              ## Print the complete rendered Helm chart
+    .objects[]| toyaml | print               ## Print the complete rendered Helm chart
 ```
