@@ -23,9 +23,13 @@ import (
 	"github.com/stretchr/testify/require"
 	"helm.sh/helm/v3/pkg/chartutil"
 	"helm.sh/helm/v3/pkg/engine"
+	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/yaml"
+	"k8s.io/client-go/dynamic"
+	"k8s.io/client-go/dynamic/fake"
 	"k8s.io/kubectl/pkg/util/openapi"
 	"k8s.io/kubectl/pkg/validation"
 	k8sYaml "sigs.k8s.io/yaml"
@@ -112,7 +116,18 @@ func (r *runner) readAndValidateYAML(fileName, fileContents string, resources op
 	return objs
 }
 
-func (r *runner) instantiateWorld(renderVals chartutil.Values, resources openapi.Resources) map[string]interface{} {
+type clientProviderFromDynamicClient struct {
+	dynIface dynamic.Interface
+}
+
+func (c clientProviderFromDynamicClient) GetClientFor(apiVersion, kind string) (dynamic.NamespaceableResourceInterface, bool, error) {
+	// This is suboptimal, but the best kind->resource translation we can do without a discovery client.
+	gvr, _ := meta.UnsafeGuessKindToResource(schema.FromAPIVersionAndKind(apiVersion, kind))
+	namespaced := true // we infer this from the namespace argument to the lookup function
+	return c.dynIface.Resource(gvr), namespaced, nil
+}
+
+func (r *runner) instantiateWorld(renderVals chartutil.Values, resources openapi.Resources, objects []runtime.Object) map[string]interface{} {
 	world := make(map[string]interface{})
 
 	renderValsBytes, err := json.Marshal(renderVals)
@@ -123,9 +138,12 @@ func (r *runner) instantiateWorld(renderVals chartutil.Values, resources openapi
 	if err := json.Unmarshal(renderValsBytes, &helmRenderVals); err != nil {
 		panic(errors.Wrap(err, "unmarshaling Helm render values"))
 	}
+
+	client := fake.NewSimpleDynamicClient(runtime.NewScheme(), objects...)
+	clientProvider := clientProviderFromDynamicClient{dynIface: client}
 	world["helm"] = helmRenderVals
 
-	renderedTemplates, err := (&engine.Engine{}).Render(r.tgt.Chart, renderVals)
+	renderedTemplates, err := engine.RenderWithClientProvider(r.tgt.Chart, renderVals, clientProvider)
 
 	if *r.test.ExpectError {
 		r.Require().Error(err, "expected rendering to fail")
@@ -263,10 +281,17 @@ func (r *runner) Run() {
 		caps = &newCaps
 	})
 
+	var availableObjects []runtime.Object
+	r.test.forEachScopeTopDown(func(t *Test) {
+		for _, o := range t.Objects {
+			obj := &unstructured.Unstructured{Object: o}
+			availableObjects = append(availableObjects, obj.DeepCopyObject())
+		}
+	})
+
 	renderVals, err := chartutil.ToRenderValues(r.tgt.Chart, values, releaseOpts, caps)
 	r.Require().NoError(err, "failed to obtain render values")
-
-	world := r.instantiateWorld(renderVals, availableSchemas)
+	world := r.instantiateWorld(renderVals, availableSchemas, availableObjects)
 	r.evaluatePredicates(world)
 }
 
