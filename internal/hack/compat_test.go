@@ -1,11 +1,12 @@
 package hack
 
 import (
+	"testing"
+
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/transport/spdy"
-	"testing"
 )
 
-func TestAPIMachineryUsable(t *testing.T) {
+func TestAPIMachineryUsable(_ *testing.T) {
 	_, _, _ = spdy.RoundTripperFor(&rest.Config{})
 }
