@@ -1,8 +1,9 @@
 package framework
 
 import (
-	"k8s.io/kubectl/pkg/util/openapi"
 	"os"
+
+	"k8s.io/kubectl/pkg/util/openapi"
 
 	"github.com/pkg/errors"
 	yamlv3 "gopkg.in/yaml.v3"
@@ -33,10 +34,4 @@ type openAPIResourcesGetter struct {
 
 func (o openAPIResourcesGetter) OpenAPISchema() (openapi.Resources, error) {
 	return o.resources, nil
-}
-
-// OpenAPIResourcesGetter returns resources wrapped in a simple implementation of openapi.OpenAPIResourcesGetter
-// that returns a fixed set of resources.
-func OpenAPIResourcesGetter(resources openapi.Resources) openapi.OpenAPIResourcesGetter {
-	return openAPIResourcesGetter{resources: resources}
 }
