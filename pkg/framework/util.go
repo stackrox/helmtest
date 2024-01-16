@@ -1,6 +1,7 @@
 package framework
 
 import (
+	"k8s.io/kubectl/pkg/util/openapi"
 	"os"
 
 	"github.com/pkg/errors"
@@ -24,4 +25,18 @@ func unmarshalYamlFromFileStrict(filename string, out interface{}) error {
 		return errors.Wrapf(err, "decoding YAML in file %s", filename)
 	}
 	return nil
+}
+
+type openAPIResourcesGetter struct {
+	resources openapi.Resources
+}
+
+func (o openAPIResourcesGetter) OpenAPISchema() (openapi.Resources, error) {
+	return o.resources, nil
+}
+
+// OpenAPIResourcesGetter returns resources wrapped in a simple implementation of openapi.OpenAPIResourcesGetter
+// that returns a fixed set of resources.
+func OpenAPIResourcesGetter(resources openapi.Resources) openapi.OpenAPIResourcesGetter {
+	return openAPIResourcesGetter{resources: resources}
 }
