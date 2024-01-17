@@ -46,7 +46,7 @@ func (r *runner) Require() *require.Assertions {
 }
 
 func (r *runner) readAndValidateYAML(fileName, fileContents string, resources openapi.Resources) []unstructured.Unstructured {
-	validator := validation.NewSchemaValidation(resources)
+	validator := validation.NewSchemaValidation(openAPIResourcesGetter{resources: resources})
 
 	yamlReader := yaml.NewYAMLReader(bufio.NewReader(strings.NewReader(fileContents)))
 

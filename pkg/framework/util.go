@@ -3,6 +3,8 @@ package framework
 import (
 	"os"
 
+	"k8s.io/kubectl/pkg/util/openapi"
+
 	"github.com/pkg/errors"
 	yamlv3 "gopkg.in/yaml.v3"
 )
@@ -24,4 +26,12 @@ func unmarshalYamlFromFileStrict(filename string, out interface{}) error {
 		return errors.Wrapf(err, "decoding YAML in file %s", filename)
 	}
 	return nil
+}
+
+type openAPIResourcesGetter struct {
+	resources openapi.Resources
+}
+
+func (o openAPIResourcesGetter) OpenAPISchema() (openapi.Resources, error) {
+	return o.resources, nil
 }
