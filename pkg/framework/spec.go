@@ -20,10 +20,11 @@ type Test struct {
 	Values RawDict `json:"values,omitempty" yaml:"values,omitempty"`
 	Set    RawDict `json:"set,omitempty" yaml:"set,omitempty"`
 
-	Defs         string            `json:"defs,omitempty" yaml:"defs,omitempty"`
-	Release      *ReleaseSpec      `json:"release,omitempty" yaml:"release,omitempty"`
-	Server       *ServerSpec       `json:"server,omitempty" yaml:"server,omitempty"`
-	Capabilities *CapabilitiesSpec `json:"capabilities,omitempty" yaml:"capabilities,omitempty"`
+	Defs         string                   `json:"defs,omitempty" yaml:"defs,omitempty"`
+	Release      *ReleaseSpec             `json:"release,omitempty" yaml:"release,omitempty"`
+	Server       *ServerSpec              `json:"server,omitempty" yaml:"server,omitempty"`
+	Capabilities *CapabilitiesSpec        `json:"capabilities,omitempty" yaml:"capabilities,omitempty"`
+	Objects      []map[string]interface{} `json:"objects,omitempty" yaml:"objects,omitempty"`
 
 	Expect      string `json:"expect,omitempty" yaml:"expect,omitempty"`
 	ExpectError *bool  `json:"expectError,omitempty" yaml:"expectError,omitempty"`
