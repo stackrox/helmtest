@@ -58,6 +58,8 @@ type ServerSpec struct {
 	// VisibleSchemas are the names of schemas that are available on the server AND discoverable via
 	// `.Capabilities.APIVersions`.
 	VisibleSchemas []string `json:"visibleSchemas,omitempty" yaml:"visibleSchemas,omitempty"`
+	// Objects are definitions of objects visible to Helm's k8s client, for example via the `lookup` function.
+	Objects []map[string]interface{} `json:"objects,omitempty" yaml:"objects,omitempty"`
 
 	// NoInherit indicates that server-side settings should *not* be inherited from the enclosing scope.
 	NoInherit bool `json:"noInherit,omitempty" yaml:"noInherit,omitempty"`

@@ -4,7 +4,15 @@ server:
 
 tests:
   - name: "Expect secret to be rendered on upgrades"
+    server:
+      objects:
+      - apiVersion: test.stackrox.io
+        kind: FakeResource
+        metadata:
+          name: example-fr
+          namespace: loadbalancer
     release:
       isUpgrade: true
     expect: |
       .secrets["some-secret-on-upgrade"] | assertThat(. != null)
+      .notesRaw | assertThat(. | contains("BTW, lookup saw 1 FakeResource"))
