@@ -195,7 +195,7 @@ func (r *runner) instantiateWorld(renderVals chartutil.Values, resources openapi
 	return world
 }
 
-func (r *runner) loadSchemas() (visible, available schemas.Schemas) {
+func (r *runner) loadServerSettings() (visible, available schemas.Schemas, objects []runtime.Object) {
 	var visibleSchemaNames, availableSchemaNames []string
 	r.test.forEachScopeTopDown(func(t *Test) {
 		server := t.Server
@@ -215,6 +215,10 @@ func (r *runner) loadSchemas() (visible, available schemas.Schemas) {
 			visibleSchemaNames = append(visibleSchemaNames, schemaName)
 			// Every visible schema is also available (but not vice versa)
 			availableSchemaNames = append(availableSchemaNames, schemaName)
+		}
+		for _, o := range server.Objects {
+			obj := &unstructured.Unstructured{Object: o}
+			objects = append(objects, obj.DeepCopyObject())
 		}
 	})
 
@@ -237,7 +241,7 @@ func (r *runner) loadSchemas() (visible, available schemas.Schemas) {
 		visible = append(visible, schema)
 	}
 
-	return visible, available
+	return visible, available, objects
 }
 
 func (r *runner) Run() {
@@ -259,7 +263,7 @@ func (r *runner) Run() {
 		rel.apply(&releaseOpts)
 	})
 
-	visibleSchemas, availableSchemas := r.loadSchemas()
+	visibleSchemas, availableSchemas, availableObjects := r.loadServerSettings()
 
 	caps := r.tgt.Capabilities
 	if caps == nil {
@@ -279,14 +283,6 @@ func (r *runner) Run() {
 		newCaps := *caps
 		newCaps.KubeVersion = t.Capabilities.toHelmKubeVersion()
 		caps = &newCaps
-	})
-
-	var availableObjects []runtime.Object
-	r.test.forEachScopeTopDown(func(t *Test) {
-		for _, o := range t.Objects {
-			obj := &unstructured.Unstructured{Object: o}
-			availableObjects = append(availableObjects, obj.DeepCopyObject())
-		}
 	})
 
 	renderVals, err := chartutil.ToRenderValues(r.tgt.Chart, values, releaseOpts, caps)

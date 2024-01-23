@@ -20,11 +20,10 @@ type Test struct {
 	Values RawDict `json:"values,omitempty" yaml:"values,omitempty"`
 	Set    RawDict `json:"set,omitempty" yaml:"set,omitempty"`
 
-	Defs         string                   `json:"defs,omitempty" yaml:"defs,omitempty"`
-	Release      *ReleaseSpec             `json:"release,omitempty" yaml:"release,omitempty"`
-	Server       *ServerSpec              `json:"server,omitempty" yaml:"server,omitempty"`
-	Capabilities *CapabilitiesSpec        `json:"capabilities,omitempty" yaml:"capabilities,omitempty"`
-	Objects      []map[string]interface{} `json:"objects,omitempty" yaml:"objects,omitempty"`
+	Defs         string            `json:"defs,omitempty" yaml:"defs,omitempty"`
+	Release      *ReleaseSpec      `json:"release,omitempty" yaml:"release,omitempty"`
+	Server       *ServerSpec       `json:"server,omitempty" yaml:"server,omitempty"`
+	Capabilities *CapabilitiesSpec `json:"capabilities,omitempty" yaml:"capabilities,omitempty"`
 
 	Expect      string `json:"expect,omitempty" yaml:"expect,omitempty"`
 	ExpectError *bool  `json:"expectError,omitempty" yaml:"expectError,omitempty"`
@@ -59,6 +58,8 @@ type ServerSpec struct {
 	// VisibleSchemas are the names of schemas that are available on the server AND discoverable via
 	// `.Capabilities.APIVersions`.
 	VisibleSchemas []string `json:"visibleSchemas,omitempty" yaml:"visibleSchemas,omitempty"`
+	// Objects are definitions of objects visible to Helm's k8s client, for example via the `lookup` function.
+	Objects []map[string]interface{} `json:"objects,omitempty" yaml:"objects,omitempty"`
 
 	// NoInherit indicates that server-side settings should *not* be inherited from the enclosing scope.
 	NoInherit bool `json:"noInherit,omitempty" yaml:"noInherit,omitempty"`

@@ -33,16 +33,16 @@ server:
   - openshift-4.1.0
   - com.coreos
   availableSchemas: [] # openAPI schema to validate against, i.e. to validate if rendered objects could be applied
+  objects: # objects visible to Helm's k8s client, for example via the `lookup` function
+    # example object specification:
+    - apiVersion: string
+      kind: string
+      metadata:
+        name: string
+        namespace: string # optional for cluster-scoped objects
   noInherit: bool # indicates that server-side settings should *not* be inherited from the enclosing scope
 capabilities: # represents the .Capabilities in Helm
   kubeVersion: string # the kubernetes version which is discoverable via `.Capabilities.KubeVersion`
-objects: # objects visible to Helm's k8s client, for example via the `lookup` function
-  # example object specification:
-  - apiVersion: string
-    kind: string
-    metadata:
-      name: string
-      namespace: string # optional for cluster-scoped objects
 values:  # values as consumed by Helm via the `-f` CLI flag.
   key: value
 set:  # alternative format for Helm values, as consumed via the `--set` CLI flag.

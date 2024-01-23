@@ -4,12 +4,13 @@ server:
 
 tests:
   - name: "Expect secret to be rendered on upgrades"
-    objects:
-    - apiVersion: test.stackrox.io
-      kind: FakeResource
-      metadata:
-        name: example-fr
-        namespace: loadbalancer
+    server:
+      objects:
+      - apiVersion: test.stackrox.io
+        kind: FakeResource
+        metadata:
+          name: example-fr
+          namespace: loadbalancer
     release:
       isUpgrade: true
     expect: |
