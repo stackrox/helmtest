@@ -9,7 +9,7 @@ require (
 	github.com/google/gnostic-models v0.6.9
 	github.com/itchyny/gojq v0.12.16
 	github.com/pkg/errors v0.9.1
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	gopkg.in/yaml.v3 v3.0.1
 	helm.sh/helm/v3 v3.14.4
 	k8s.io/apimachinery v0.29.3
