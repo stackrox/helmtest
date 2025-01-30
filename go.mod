@@ -7,7 +7,7 @@ toolchain go1.22.5
 require (
 	github.com/golangci/golangci-lint v1.55.2
 	github.com/google/gnostic-models v0.6.9
-	github.com/itchyny/gojq v0.12.16
+	github.com/itchyny/gojq v0.12.17
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.10.0
 	gopkg.in/yaml.v3 v3.0.1
