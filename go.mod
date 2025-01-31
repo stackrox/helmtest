@@ -1,8 +1,8 @@
 module github.com/stackrox/helmtest
 
-go 1.22
+go 1.23
 
-toolchain go1.22.5
+toolchain go1.23.5
 
 require (
 	github.com/golangci/golangci-lint v1.55.2
