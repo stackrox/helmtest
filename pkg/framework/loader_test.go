@@ -39,7 +39,6 @@ func TestLoader(t *testing.T) {
 	}
 
 	for name, tt := range tests {
-		tt := tt
 		t.Run(name, func(t *testing.T) {
 			var opts []LoaderOpt
 			if tt.additionalDir != "" {
