@@ -1,5 +1,6 @@
 run:
   timeout: 5m
+  go: "1.23"
 
 issues:
   exclude-use-default: false
@@ -47,7 +48,6 @@ linters-settings:
       - hugeParam
       - rangeValCopy
   gosimple:
-    go: "1.16"
     checks: ["all"]
   nolintlint:
     allow-leading-space: false # require machine-readable nolint directives (i.e. with no leading space)
@@ -57,10 +57,8 @@ linters-settings:
   revive:
     min-confidence: 0
   staticcheck:
-    go: "1.16"
     checks: ["all"]
   stylecheck:
-    go: "1.16"
     checks: ["all", "-ST1000"]
 
 linters:
@@ -70,6 +68,7 @@ linters:
   enable:
     - asciicheck
     # - bodyclose
+    - copyloopvar
     # - deadcode
     # - depguard
     # - dogsled
@@ -80,7 +79,6 @@ linters:
     # - gochecknoinits
     # - gocognit
     # - goconst
-    - exportloopref
     - gocritic
     # - gocyclo
     # - godot
