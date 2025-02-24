@@ -28,7 +28,7 @@ GOLANGCILINT_BIN := $(GOBIN)/golangci-lint
 $(GOLANGCILINT_BIN): deps
 	@echo "+ $@"
 	cd tool-imports; \
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint
+	GOBIN=$(GOBIN) go install github.com/golangci/golangci-lint/cmd/golangci-lint
 
 ###########
 ## Lint ##
