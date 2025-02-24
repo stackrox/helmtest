@@ -27,6 +27,7 @@ SHELL := env GOBIN=$(GOBIN) PATH=$(PATH) /bin/bash
 GOLANGCILINT_BIN := $(GOBIN)/golangci-lint
 $(GOLANGCILINT_BIN): deps
 	@echo "+ $@"
+	cd tool-imports; \
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint
 
 ###########
