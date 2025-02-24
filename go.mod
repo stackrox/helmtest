@@ -15,7 +15,7 @@ require (
 	k8s.io/apimachinery v0.32.2
 	k8s.io/client-go v0.32.2
 	k8s.io/kube-openapi v0.0.0-20241105132330-32ad38e42d3f
-	k8s.io/kubectl v0.32.1
+	k8s.io/kubectl v0.32.2
 	k8s.io/utils v0.0.0-20241104100929-3ea5e8cea738
 	sigs.k8s.io/yaml v1.4.0
 )
@@ -242,7 +242,7 @@ require (
 	honnef.co/go/tools v0.6.0 // indirect
 	k8s.io/api v0.32.2 // indirect
 	k8s.io/apiextensions-apiserver v0.32.1 // indirect
-	k8s.io/cli-runtime v0.32.1 // indirect
+	k8s.io/cli-runtime v0.32.2 // indirect
 	k8s.io/klog/v2 v2.130.1 // indirect
 	mvdan.cc/gofumpt v0.7.0 // indirect
 	mvdan.cc/unparam v0.0.0-20240528143540-8a5130ca722f // indirect
