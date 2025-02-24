@@ -2,7 +2,7 @@ module github.com/stackrox/helmtest
 
 go 1.23.0
 
-toolchain go1.23.5
+toolchain go1.23.2
 
 require (
 	github.com/google/gnostic-models v0.6.9
