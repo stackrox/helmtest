@@ -2,6 +2,11 @@
 
 - OpenShift 3.11 schema source: https://github.com/garethr/openshift-json-schema/blob/master/v3.11.0/_definitions.json
 - OpenShift 4.1 schema source: https://github.com/garethr/openshift-json-schema/blob/master/v4.1.0/_definitions.json
+- OpenShift 4.18 schema source:
+  - Install openshift
+  - `oc get --raw /openapi/v2 | jq --sort-keys 'del(.parameters, .paths[], .security, .securityDefinitions)'  > openshift-${version}.json`
+  - Update the `.info` in the resulting file
+  - `gzip -9 openshift-${version}.json`
 
 ## Adhoc generation
 
