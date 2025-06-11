@@ -41,7 +41,7 @@ func ParseExpectations(spec string, sctx SourceContext) ([]*ParsedQuery, error) 
 			next = line
 		}
 
-		if current != "" {
+		if current != "" && !strings.HasPrefix(current, "#") {
 			query, err := ParseQuery(current, currentSCtx)
 			if err != nil {
 				return nil, errors.Wrapf(err, "parsing query ending at %s", sctx)
@@ -55,7 +55,7 @@ func ParseExpectations(spec string, sctx SourceContext) ([]*ParsedQuery, error) 
 		return nil, errors.Wrap(err, "parsing expectations")
 	}
 
-	if current != "" {
+	if current != "" && !strings.HasPrefix(current, "#") {
 		query, err := ParseQuery(current, currentSCtx)
 		if err != nil {
 			return nil, errors.Wrapf(err, "parsing query ending at %s", sctx)
