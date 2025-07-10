@@ -6,7 +6,7 @@ import (
 	"k8s.io/kubectl/pkg/util/openapi"
 
 	"github.com/pkg/errors"
-	yamlv3 "gopkg.in/yaml.v3"
+	yamlv3 "go.yaml.in/yaml/v3"
 )
 
 // unmarshalYamlFromFileStrict unmarshals the contents of filename into out, relying on gopkg.in/yaml.v3 semantics.
