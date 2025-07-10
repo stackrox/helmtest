@@ -6,7 +6,7 @@ import (
 	openapi_v2 "github.com/google/gnostic-models/openapiv2"
 	"github.com/pkg/errors"
 	"github.com/stackrox/helmtest/internal/rox-imported/set"
-	"gopkg.in/yaml.v3"
+	"go.yaml.in/yaml/v3"
 	"helm.sh/helm/v3/pkg/chartutil"
 	k8sSchema "k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/kubectl/pkg/util/openapi"
