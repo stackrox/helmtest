@@ -6,7 +6,7 @@ import (
 	"github.com/itchyny/gojq"
 	"github.com/pkg/errors"
 	"github.com/stackrox/helmtest/internal/logic"
-	"gopkg.in/yaml.v3"
+	"go.yaml.in/yaml/v3"
 )
 
 // Additional built-ins for gojq
