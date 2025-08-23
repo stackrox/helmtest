@@ -18,7 +18,7 @@ PATH := $(GOBIN):$(PATH)
 # and so, without the following line, the shell does not end up
 # trying commands in $(GOBIN) first.
 # See https://stackoverflow.com/a/36226784/3690207
-SHELL := env GOBIN=$(GOBIN) PATH=$(PATH) /bin/bash
+SHELL := env GOBIN="$(GOBIN)" PATH="$(PATH)" /bin/bash
 
 ########################################
 ###### Binaries we depend on ###########
