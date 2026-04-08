@@ -5,6 +5,8 @@
 - OpenShift 4.18 schema source:
   - Install openshift
   - `oc get --raw /openapi/v2 | jq --sort-keys 'del(.parameters, .paths[], .security, .securityDefinitions)'  > openshift-${version}.json`
+  - You might need to pipe the `oc` output through `sed -Ee 's/(Authorization: Bearer sha256)~[^ ]*/\1~REDACTED/;'` to satisfy
+    checks against credential leaking, because the in-line documentation might contain example tokens.
   - Update the `.info` in the resulting file
   - `gzip -9 openshift-${version}.json`
 
